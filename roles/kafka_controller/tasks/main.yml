@@ -98,6 +98,19 @@
   tags:
     - privileged
 
+# Colocated Controller and Broker will have Service name conflicts
+# Copy Kafka server's system Service to create Kraft Controller's Service
+- name: Rename Kafka Controller Service for Colocated broker and controller
+  copy:
+    src: "{{binary_base_path}}/lib/systemd/system/{{kafka_broker.systemd_file|basename}}"
+    remote_src: true
+    dest: "{{kafka_controller.systemd_file}}"
+    mode: 0644
+    force: true
+  when: groups['kafka_broker'] is defined and inventory_hostname in groups['kafka_broker']
+  tags:
+    - systemd
+
 # Archive File deployments need to create SystemD service units
 # Copy the tarball's systemd service to the system
 - name: Copy Kafka Controller Service from archive file to system

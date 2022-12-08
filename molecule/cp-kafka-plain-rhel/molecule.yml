@@ -105,3 +105,7 @@ provisioner:
         sasl_protocol: plain
 
         confluent_server_enabled: false
+        # Properties for kraft mode when controller and broker running on same node
+        kafka_controller_log_dir: /var/log/controller
+        kafka_controller_custom_properties:
+          log.dirs: /var/lib/controller/data
